@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>link lists</title>
+</head>
+<body>
+	<script>
+
+	function Node(x){
+		this.parent = undefined;
+		this.child = undefined;
+		this.value = x;
+		this.slot = 1;
+	}
+
+	function DLNode(first_val){
+		this.head = new Node(first_val);
+		// console.log('this is the head: ',this.head);
+		this.tail = this.tail || this.head;
+		// console.log('this is the tail: ',this.tail);
+
+		this.addNode = function(val){
+			// var self = this;
+			var node = new Node(val);
+			this.tail.child = node;
+			node.parent = this.tail;
+			node.slot = node.parent.slot + 1;
+			// console.log('node parent: ',node.parent.value);
+			// console.log('node child: ',this.tail.child.value);
+			this.tail = node;
+		}
+
+		this.insertNode = function (val,slot) {
+			var node = new Node(val);
+			var findNode = this.head;
+			node.slot = slot;
+			while(findNode.slot != slot){
+				// console.log('findnode',findNode);
+				findNode = findNode.child;
+			}
+			findNode.parent.child = node;
+			node.parent = findNode.parent;
+			node.child = findNode;
+			findNode.parent = node;
+			while(this.tail.slot > findNode.slot ) {
+				findNode.slot = findNode.slot + 1;
+				findNode = findNode.child;
+			}
+			this.tail.slot = this.tail.slot + 1;
+
+		}
+
+		this.removeNode = function(slot) {
+			var findNode = this.head;
+			while(findNode.slot != slot){
+				// console.log('findnode',findNode);
+				findNode = findNode.child;
+			}
+			findNode.parent.child = findNode.child;
+			findNode.child.parent = findNode.parent;
+			findNode.child.slot = findNode.slot;
+			findNode = findNode.child;
+			while(this.tail.slot > findNode.slot){
+				findNode.child.slot = findNode.child.slot-1;
+				findNode = findNode.child;
+			}
+		}
+
+		this.displayContents = function(){
+			// console.log(this.head.value);
+			var currentnode = this.head;
+			// console.log('currentnode: ',currentnode);
+			while (currentnode!= undefined){
+				console.log(currentnode.value);
+				currentnode = currentnode.child;
+			}
+		}
+	}
+
+	var sample = new DLNode(3);
+	sample.addNode(5);
+	sample.addNode(7);
+	sample.addNode(8);
+	sample.addNode(12);
+	sample.insertNode(4,2);
+	sample.insertNode(20,4);
+	sample.removeNode(3);
+	sample.removeNode(5);
+	sample.displayContents();
+	// console.log(sample);
+
+
+	</script>
+</body>
+</html>
